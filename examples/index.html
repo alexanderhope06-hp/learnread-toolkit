@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Try LearnRead Toolkit, an open-source JavaScript toolkit for learning and reading websites.">
+  <title>LearnRead Toolkit — Interactive Demo</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./demo.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#home">
+      <span class="brand-icon">L</span>
+      <span>LearnRead<span class="brand-light"> Toolkit</span></span>
+    </a>
+    <a class="github-link" href="https://github.com/alexanderhope06-hp/learnread-toolkit" target="_blank" rel="noopener noreferrer">
+      View on GitHub ↗
+    </a>
+  </header>
+
+  <main id="home">
+    <section class="hero">
+      <span class="eyebrow">OPEN-SOURCE JAVASCRIPT TOOLKIT</span>
+      <h1>Build better ways<br>to <span>learn and read.</span></h1>
+      <p>
+        Reusable JavaScript tools for educational platforms and reading
+        websites. Try the features below and see what the toolkit can do.
+      </p>
+      <div class="hero-actions">
+        <a class="button primary" href="#learning">Try the toolkit ↓</a>
+        <a class="button secondary" href="#about">How it works</a>
+      </div>
+      <div class="hero-note">
+        <span class="status-dot"></span>
+        Interactive demonstration · No account required
+      </div>
+    </section>
+
+    <section class="section" id="learning">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">MODULE 01</span>
+          <h2>Learning toolkit</h2>
+          <p>Test your knowledge and track your learning progress.</p>
+        </div>
+        <span class="module-number">01 / 02</span>
+      </div>
+
+      <div class="learning-grid">
+        <article class="card quiz-card">
+          <div class="card-heading">
+            <div>
+              <span class="small-label">KNOWLEDGE CHECK</span>
+              <h3>JavaScript basics</h3>
+            </div>
+            <span class="pill">3 questions</span>
+          </div>
+
+          <div id="quiz-questions">
+            <fieldset class="question" data-question="q1">
+              <legend><span class="question-number">01</span> Which language is used to add interactivity to web pages?</legend>
+              <label class="answer"><input type="radio" name="q1" value="0"><span>HTML</span></label>
+              <label class="answer"><input type="radio" name="q1" value="1"><span>JavaScript</span></label>
+              <label class="answer"><input type="radio" name="q1" value="2"><span>SQL</span></label>
+            </fieldset>
+
+            <fieldset class="question" data-question="q2">
+              <legend><span class="question-number">02</span> Which keyword declares a block-scoped variable that can be reassigned?</legend>
+              <label class="answer"><input type="radio" name="q2" value="0"><span>const</span></label>
+              <label class="answer"><input type="radio" name="q2" value="1"><span>let</span></label>
+              <label class="answer"><input type="radio" name="q2" value="2"><span>static</span></label>
+            </fieldset>
+
+            <fieldset class="question" data-question="q3">
+              <legend><span class="question-number">03</span> Which method converts a JSON string into a JavaScript value?</legend>
+              <label class="answer"><input type="radio" name="q3" value="0"><span>JSON.parse()</span></label>
+              <label class="answer"><input type="radio" name="q3" value="1"><span>JSON.stringify()</span></label>
+              <label class="answer"><input type="radio" name="q3" value="2"><span>JSON.convert()</span></label>
+            </fieldset>
+          </div>
+
+          <button class="button primary full-width" id="submit-quiz">Submit answers</button>
+          <div id="quiz-result" class="result" role="status" aria-live="polite" hidden></div>
+        </article>
+
+        <article class="card progress-card">
+          <span class="small-label">YOUR LEARNING SPACE</span>
+          <h3>Course progress</h3>
+          <p class="muted">Mark lessons complete to see the progress tracker update.</p>
+
+          <div class="progress-summary">
+            <div>
+              <strong id="course-percent">0%</strong>
+              <span>completed</span>
+            </div>
+            <span id="lesson-count">0 of 4 lessons</span>
+          </div>
+
+          <div class="progress-track" role="progressbar" aria-label="Course completion" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="course-bar">
+            <div class="progress-fill" id="course-fill"></div>
+          </div>
+
+          <div class="lesson-list">
+            <label class="lesson">
+              <input type="checkbox" class="lesson-check">
+              <span><strong>Getting started</strong><small>Understand the toolkit</small></span>
+              <span class="lesson-state">Lesson 01</span>
+            </label>
+            <label class="lesson">
+              <input type="checkbox" class="lesson-check">
+              <span><strong>Quiz scoring</strong><small>Check answers automatically</small></span>
+              <span class="lesson-state">Lesson 02</span>
+            </label>
+            <label class="lesson">
+              <input type="checkbox" class="lesson-check">
+              <span><strong>Reading progress</strong><small>Measure reading completion</small></span>
+              <span class="lesson-state">Lesson 03</span>
+            </label>
+            <label class="lesson">
+              <input type="checkbox" class="lesson-check">
+              <span><strong>Bookmarks</strong><small>Save a reading position</small></span>
+              <span class="lesson-state">Lesson 04</span>
+            </label>
+          </div>
+          <p class="storage-note">Demo progress is saved in this browser.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reading-section" id="reading">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">MODULE 02</span>
+          <h2>Reading toolkit</h2>
+          <p>Explore reading controls, progress tracking, and bookmarks.</p>
+        </div>
+        <span class="module-number">02 / 02</span>
+      </div>
+
+      <div class="reading-grid">
+        <article class="card reader-card">
+          <div class="reader-toolbar">
+            <div>
+              <span class="small-label">SAMPLE READING</span>
+              <h3>The Value of Learning</h3>
+            </div>
+            <div class="text-controls" aria-label="Reading text size controls">
+              <button class="icon-button" id="decrease-text" aria-label="Decrease text size">A−</button>
+              <button class="icon-button" id="increase-text" aria-label="Increase text size">A+</button>
+            </div>
+          </div>
+
+          <div class="reader-content" id="reader-content" tabindex="0">
+            <p>Learning is not limited to a classroom. Every problem we solve, every useful question we ask, and every new skill we practise gives us an opportunity to grow.</p>
+            <p>The most effective way to learn is to combine understanding with practice. Reading about a subject gives us a foundation, but applying that knowledge helps us discover what we truly understand and where we still need to improve.</p>
+            <p>Progress does not always happen quickly. Sometimes we repeat a task several times before it becomes familiar. What matters is that we keep learning from our mistakes rather than allowing them to stop us.</p>
+            <p>Technology can make knowledge easier to access, but the responsibility to think carefully, check information, and use what we learn wisely remains with us.</p>
+            <p>Whether we are studying programming, reading a book, or learning a practical skill, small and consistent efforts can produce meaningful results over time.</p>
+          </div>
+
+          <div class="reader-footer">
+            <div class="reading-progress-info">
+              <span>Reading progress</span>
+              <strong id="reading-percent">0%</strong>
+            </div>
+            <div class="progress-track" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="reading-bar">
+              <div class="progress-fill" id="reading-fill"></div>
+            </div>
+            <div class="reader-actions">
+              <button class="button secondary" id="save-bookmark">Save bookmark</button>
+              <button class="button secondary" id="restore-bookmark">Return to bookmark</button>
+            </div>
+            <p id="bookmark-status" class="storage-note" role="status" aria-live="polite">No bookmark saved yet.</p>
+          </div>
+        </article>
+
+        <aside class="card features-card">
+          <span class="small-label">BUILT FOR DEVELOPERS</span>
+          <h3>Small tools. Useful building blocks.</h3>
+          <div class="feature-item">
+            <span class="feature-icon">✓</span>
+            <div><strong>Automatic scoring</strong><p>Calculate quiz results with reusable JavaScript functions.</p></div>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">↗</span>
+            <div><strong>Progress tracking</strong><p>Measure course completion and reading progress.</p></div>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">⌑</span>
+            <div><strong>Browser bookmarks</strong><p>Save and restore a reader's position locally.</p></div>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">{ }</span>
+            <div><strong>Reusable JavaScript</strong><p>Integrate the core functions into your own application.</p></div>
+          </div>
+          <div class="callout">
+            <strong>Still in early development</strong>
+            <p>This demonstration shows the current core features. It is not a complete learning platform, and account synchronization and backend integrations are not yet implemented.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="about-section" id="about">
+      <span class="eyebrow">WHY LEARNREAD?</span>
+      <h2>Spend less time rebuilding<br>the same features.</h2>
+      <p>Our goal is to help developers create better learning and reading experiences using reusable, adaptable JavaScript components.</p>
+      <a class="button light-button" href="https://github.com/alexanderhope06-hp/learnread-toolkit" target="_blank" rel="noopener noreferrer">Explore the source code ↗</a>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <a class="brand footer-brand" href="#home">LearnRead Toolkit</a>
+    <span>Open-source project · Early development</span>
+  </footer>
+</body>
+</html>
