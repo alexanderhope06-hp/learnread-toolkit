@@ -4,6 +4,11 @@ import assert from "node:assert/strict";
 import {
   scoreQuiz,
   calculateCourseProgress,
+  createQuizAttempt,
+  summarizeQuizAttempts,
+  summarizeLessonProgress,
+  saveQuizAttempt,
+  getQuizAttempts,
   calculateReadingProgress,
   saveBookmark,
   getBookmark

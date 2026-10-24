@@ -1,6 +1,11 @@
 export {
   scoreQuiz,
-  calculateCourseProgress
+  calculateCourseProgress,
+  createQuizAttempt,
+  summarizeQuizAttempts,
+  summarizeLessonProgress,
+  saveQuizAttempt,
+  getQuizAttempts
 } from "./learning/index.js";
 
 export {
