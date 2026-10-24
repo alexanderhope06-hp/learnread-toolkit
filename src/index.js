@@ -11,5 +11,12 @@ export {
 export {
   calculateReadingProgress,
   saveBookmark,
-  getBookmark
+  getBookmark,
+  saveReadingProgress,
+  getReadingProgress,
+  saveChapterBookmark,
+  getChapterBookmarks,
+  deleteChapterBookmark,
+  recordReadingHistory,
+  getReadingHistory
 } from "./reading/index.js";

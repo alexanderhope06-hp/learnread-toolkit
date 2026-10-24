@@ -1,13 +1,26 @@
 {
   "name": "learnread-toolkit",
   "version": "0.1.0",
-  "description": "Reusable JavaScript components for learning and reading experiences on the web.",
+  "description": "Reusable JavaScript utilities for learning and reading experiences on the web.",
   "type": "module",
   "main": "./src/index.js",
   "exports": {
     ".": "./src/index.js",
     "./learning": "./src/learning/index.js",
     "./reading": "./src/reading/index.js"
+  },
+  "files": [
+    "src/",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexanderhope06-hp/learnread-toolkit.git"
+  },
+  "homepage": "https://github.com/alexanderhope06-hp/learnread-toolkit#readme",
+  "bugs": {
+    "url": "https://github.com/alexanderhope06-hp/learnread-toolkit/issues"
   },
   "scripts": {
     "test": "node --test",
@@ -19,6 +32,8 @@
     "learning",
     "reading",
     "quiz",
+    "progress-tracking",
+    "bookmarks",
     "open-source"
   ],
   "license": "MIT",

@@ -11,7 +11,14 @@ import {
   getQuizAttempts,
   calculateReadingProgress,
   saveBookmark,
-  getBookmark
+  getBookmark,
+  saveReadingProgress,
+  getReadingProgress,
+  saveChapterBookmark,
+  getChapterBookmarks,
+  deleteChapterBookmark,
+  recordReadingHistory,
+  getReadingHistory
 } from "../src/index.js";
 
 // --------------------------------------------------
@@ -97,7 +104,7 @@ test("calculates reading progress", () => {
 test("rejects invalid reading positions", () => {
   assert.throws(
     () => calculateReadingProgress(-1, 100),
-    /non-negative numbers/
+    /non-negative number/
   );
 });
 
@@ -339,5 +346,404 @@ test("prevents saving the same quiz attempt twice", () => {
   assert.throws(
     () => saveQuizAttempt(attempt, storage, "student-1"),
     /already been saved/
+  );
+});
+
+
+
+// --------------------------------------------------
+// SAVED READING PROGRESS TESTS
+// --------------------------------------------------
+
+test("saves and retrieves reading progress for a chapter", () => {
+  const data = new Map();
+
+  const storage = {
+    setItem(key, value) {
+      data.set(key, value);
+    },
+    getItem(key) {
+      return data.has(key) ? data.get(key) : null;
+    }
+  };
+
+  const progress = saveReadingProgress(
+    "chapter-1",
+    250,
+    1000,
+    storage
+  );
+
+  assert.equal(progress.chapterId, "chapter-1");
+  assert.equal(progress.position, 250);
+  assert.equal(progress.totalLength, 1000);
+  assert.equal(progress.percentage, 25);
+
+  const saved = getReadingProgress("chapter-1", storage);
+
+  assert.equal(saved.chapterId, "chapter-1");
+  assert.equal(saved.position, 250);
+  assert.equal(saved.percentage, 25);
+  assert.ok(saved.updatedAt);
+
+  assert.equal(getReadingProgress("chapter-2", storage), null);
+});
+
+test("keeps reading progress separate for different chapters", () => {
+  const data = new Map();
+
+  const storage = {
+    setItem(key, value) {
+      data.set(key, value);
+    },
+    getItem(key) {
+      return data.has(key) ? data.get(key) : null;
+    }
+  };
+
+  saveReadingProgress("chapter-1", 200, 1000, storage);
+  saveReadingProgress("chapter-2", 600, 1200, storage);
+
+  assert.equal(
+    getReadingProgress("chapter-1", storage).percentage,
+    20
+  );
+
+  assert.equal(
+    getReadingProgress("chapter-2", storage).percentage,
+    50
+  );
+});
+
+test("clamps saved reading position to the chapter length", () => {
+  const data = new Map();
+
+  const storage = {
+    setItem(key, value) {
+      data.set(key, value);
+    },
+    getItem(key) {
+      return data.has(key) ? data.get(key) : null;
+    }
+  };
+
+  const progress = saveReadingProgress(
+    "chapter-1",
+    1500,
+    1000,
+    storage
+  );
+
+  assert.equal(progress.position, 1000);
+  assert.equal(progress.percentage, 100);
+});
+
+test("rejects invalid saved reading progress values", () => {
+  const data = new Map();
+
+  const storage = {
+    setItem(key, value) {
+      data.set(key, value);
+    },
+    getItem(key) {
+      return data.has(key) ? data.get(key) : null;
+    }
+  };
+
+  assert.throws(
+    () => saveReadingProgress("", 100, 1000, storage),
+    /Chapter ID/
+  );
+
+  assert.throws(
+    () => saveReadingProgress("chapter-1", -1, 1000, storage),
+    /non-negative number/
+  );
+
+  assert.throws(
+    () => saveReadingProgress("chapter-1", 100, -1, storage),
+    /non-negative number/
+  );
+});
+
+// --------------------------------------------------
+// MULTIPLE CHAPTER BOOKMARK TESTS
+// --------------------------------------------------
+
+test("saves and retrieves multiple chapter bookmarks", () => {
+  const data = new Map();
+
+  const storage = {
+    setItem(key, value) {
+      data.set(key, value);
+    },
+    getItem(key) {
+      return data.has(key) ? data.get(key) : null;
+    }
+  };
+
+  saveChapterBookmark(
+    "chapter-1",
+    "The Beginning",
+    150,
+    storage
+  );
+
+  saveChapterBookmark(
+    "chapter-2",
+    "The Journey",
+    450,
+    storage
+  );
+
+  const bookmarks = getChapterBookmarks(storage);
+
+  assert.equal(bookmarks.length, 2);
+
+  assert.deepEqual(
+    bookmarks.map((bookmark) => bookmark.chapterId),
+    ["chapter-1", "chapter-2"]
+  );
+
+  assert.equal(bookmarks[0].title, "The Beginning");
+  assert.equal(bookmarks[0].position, 150);
+
+  assert.equal(bookmarks[1].title, "The Journey");
+  assert.equal(bookmarks[1].position, 450);
+});
+
+test("updates an existing chapter bookmark instead of duplicating it", () => {
+  const data = new Map();
+
+  const storage = {
+    setItem(key, value) {
+      data.set(key, value);
+    },
+    getItem(key) {
+      return data.has(key) ? data.get(key) : null;
+    }
+  };
+
+  saveChapterBookmark(
+    "chapter-1",
+    "Old Title",
+    100,
+    storage
+  );
+
+  saveChapterBookmark(
+    "chapter-1",
+    "Updated Title",
+    350,
+    storage
+  );
+
+  const bookmarks = getChapterBookmarks(storage);
+
+  assert.equal(bookmarks.length, 1);
+  assert.equal(bookmarks[0].title, "Updated Title");
+  assert.equal(bookmarks[0].position, 350);
+});
+
+test("deletes a chapter bookmark without deleting other bookmarks", () => {
+  const data = new Map();
+
+  const storage = {
+    setItem(key, value) {
+      data.set(key, value);
+    },
+    getItem(key) {
+      return data.has(key) ? data.get(key) : null;
+    }
+  };
+
+  saveChapterBookmark("chapter-1", "Chapter One", 100, storage);
+  saveChapterBookmark("chapter-2", "Chapter Two", 200, storage);
+
+  assert.equal(
+    deleteChapterBookmark("chapter-1", storage),
+    true
+  );
+
+  const bookmarks = getChapterBookmarks(storage);
+
+  assert.equal(bookmarks.length, 1);
+  assert.equal(bookmarks[0].chapterId, "chapter-2");
+
+  assert.equal(
+    deleteChapterBookmark("chapter-1", storage),
+    false
+  );
+});
+
+test("rejects invalid chapter bookmark data", () => {
+  const data = new Map();
+
+  const storage = {
+    setItem(key, value) {
+      data.set(key, value);
+    },
+    getItem(key) {
+      return data.has(key) ? data.get(key) : null;
+    }
+  };
+
+  assert.throws(
+    () => saveChapterBookmark("", "Chapter One", 100, storage),
+    /Chapter ID/
+  );
+
+  assert.throws(
+    () => saveChapterBookmark("chapter-1", "", 100, storage),
+    /Chapter title/
+  );
+
+  assert.throws(
+    () => saveChapterBookmark("chapter-1", "Chapter One", -1, storage),
+    /non-negative number/
+  );
+});
+
+// --------------------------------------------------
+// READING HISTORY TESTS
+// --------------------------------------------------
+
+test("records and retrieves reading history", () => {
+  const data = new Map();
+
+  const storage = {
+    setItem(key, value) {
+      data.set(key, value);
+    },
+    getItem(key) {
+      return data.has(key) ? data.get(key) : null;
+    }
+  };
+
+  const entry = recordReadingHistory(
+    "chapter-1",
+    "The Beginning",
+    300,
+    1000,
+    storage
+  );
+
+  assert.equal(entry.chapterId, "chapter-1");
+  assert.equal(entry.title, "The Beginning");
+  assert.equal(entry.position, 300);
+  assert.equal(entry.totalLength, 1000);
+  assert.equal(entry.percentage, 30);
+  assert.ok(entry.lastReadAt);
+
+  const history = getReadingHistory(storage);
+
+  assert.equal(history.length, 1);
+  assert.equal(history[0].chapterId, "chapter-1");
+  assert.equal(history[0].percentage, 30);
+});
+
+test("updates reading history instead of duplicating a chapter", () => {
+  const data = new Map();
+
+  const storage = {
+    setItem(key, value) {
+      data.set(key, value);
+    },
+    getItem(key) {
+      return data.has(key) ? data.get(key) : null;
+    }
+  };
+
+  recordReadingHistory(
+    "chapter-1",
+    "The Beginning",
+    100,
+    1000,
+    storage
+  );
+
+  recordReadingHistory(
+    "chapter-2",
+    "The Journey",
+    200,
+    1000,
+    storage
+  );
+
+  recordReadingHistory(
+    "chapter-1",
+    "The Beginning",
+    700,
+    1000,
+    storage
+  );
+
+  const history = getReadingHistory(storage);
+
+  assert.equal(history.length, 2);
+
+  // The most recently updated chapter should appear first.
+  assert.equal(history[0].chapterId, "chapter-1");
+  assert.equal(history[0].position, 700);
+  assert.equal(history[0].percentage, 70);
+
+  assert.equal(history[1].chapterId, "chapter-2");
+  assert.equal(history[1].position, 200);
+});
+
+test("limits reading history to the 50 most recent chapters", () => {
+  const data = new Map();
+
+  const storage = {
+    setItem(key, value) {
+      data.set(key, value);
+    },
+    getItem(key) {
+      return data.has(key) ? data.get(key) : null;
+    }
+  };
+
+  for (let index = 1; index <= 55; index += 1) {
+    recordReadingHistory(
+      `chapter-${index}`,
+      `Chapter ${index}`,
+      100,
+      1000,
+      storage
+    );
+  }
+
+  const history = getReadingHistory(storage);
+
+  assert.equal(history.length, 50);
+  assert.equal(history[0].chapterId, "chapter-55");
+  assert.equal(history[49].chapterId, "chapter-6");
+});
+
+test("rejects invalid reading history values", () => {
+  const data = new Map();
+
+  const storage = {
+    setItem(key, value) {
+      data.set(key, value);
+    },
+    getItem(key) {
+      return data.has(key) ? data.get(key) : null;
+    }
+  };
+
+  assert.throws(
+    () => recordReadingHistory("", "Chapter One", 100, 1000, storage),
+    /Chapter ID/
+  );
+
+  assert.throws(
+    () => recordReadingHistory("chapter-1", "", 100, 1000, storage),
+    /Chapter title/
+  );
+
+  assert.throws(
+    () => recordReadingHistory("chapter-1", "Chapter One", -1, 1000, storage),
+    /non-negative number/
   );
 });
