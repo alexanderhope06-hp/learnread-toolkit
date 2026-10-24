@@ -11,6 +11,14 @@ It focuses on two core areas:
 
 The toolkit is designed to be framework-independent, so its functions can be integrated into different JavaScript applications.
 
+
+🚀 **[Try the Live Demo](https://alexanderhope06-hp.github.io/learnread-toolkit/examples/)**
+
+📦 **[View the Source Code on GitHub](https://github.com/alexanderhope06-hp/learnread-toolkit)**
+
+🧪 **[View the Automated Tests](https://github.com/alexanderhope06-hp/learnread-toolkit/actions)**
+
+
 ## Features
 
 ### Learning tools
